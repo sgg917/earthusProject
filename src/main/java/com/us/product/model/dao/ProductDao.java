@@ -144,7 +144,7 @@ public class ProductDao {
 			}
 		}
 		
-		sql += " ORDER BY PRO_CODE DESC) A";
+		sql += " ORDER BY PRO_COUNT DESC) A";
 		sql += ") WHERE RNUM BETWEEN " + startRow + " AND " + endRow;
 		
 		try {
