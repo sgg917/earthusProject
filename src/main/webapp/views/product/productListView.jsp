@@ -135,11 +135,11 @@ integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeV
                                 <!-- 상품 정렬 select -->
                                 <div class="single_product_menu d-flex" id="selectArea">
                                     <h4 id="selectTitle">정렬기준 : </h4>
-                                    <select class="custom-select">
-                                        <option value="1">조회순</option>
-                                        <option value="2">인기순</option>
-                                        <option value="3">가격높은순</option>
-                                        <option value="4">가격낮은순</option>
+                                    <select class="custom-select" id="orderby">
+                                        <option value="PRO_COUNT DESC">조회순</option>
+                                        <option value="HOT">인기순</option>
+                                        <option value="PRICE DESC">가격높은순</option>
+                                        <option value="PRICE">가격낮은순</option>
                                     </select>
                                 </div>
                                 <!--  상품 정렬 select 끝 -->
@@ -270,7 +270,7 @@ integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeV
 			               
 			            <!------------------- Modal ------------------->
 			           	<!------- 장바구니 추가 완료 Modal ------->
-		                <div class="modal" id="insertCartModal">
+		                <div class="modal fade" id="insertCartModal">
 		                  <div class="modal-dialog">
 		                    <div class="modal-content">
 		
@@ -291,7 +291,7 @@ integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeV
 			        	</div>
 		                      
 		               <!------- 장바구니 추가 실패 Modal ------->
-		                <div class="modal" id="unavailable">
+		                <div class="modal fade" id="unavailable">
 		                  <div class="modal-dialog">
 		                    <div class="modal-content">
 		
