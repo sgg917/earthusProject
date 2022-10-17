@@ -32,33 +32,7 @@ public class ProductDao {
 		}
 	}
 	
-	// 해당하는 카테고리의 상품 개수 조회
-	public int selectListCount(Connection conn, int categoryNo) {
-		int listCount = 0;
-		PreparedStatement pstmt = null;
-		ResultSet rset = null;
-		String sql = prop.getProperty("selectListCount");
-		
-		try {
-			pstmt = conn.prepareStatement(sql);
-			pstmt.setInt(1, categoryNo);
-			rset = pstmt.executeQuery();
-			
-			if(rset.next()) {
-				listCount = rset.getInt("listCount");
-			}
-			
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}finally {
-			close(rset);
-			close(pstmt);
-		}
-		return listCount;
-		
-	}
-	
-	// 상품 개수 조회 (카테고리별 + 전체) _ 수민
+	// 카테고리별 or 전체 상품 개수 조회 _ 수민
 	public int selectListCountSM(Connection conn, int categoryNo, String keyword) {
 		int listCount = 0;
 		PreparedStatement pstmt = null;
@@ -97,8 +71,7 @@ public class ProductDao {
 		
 	}
 	
-	
-	// 카테고리 전체 조회
+	// 전체 카테고리 조회
 	public ArrayList<Category> selectCategoryList(Connection conn){
 		ArrayList<Category> cList = new ArrayList<>();
 		PreparedStatement pstmt = null;
@@ -111,9 +84,9 @@ public class ProductDao {
 			
 			while(rset.next()){
 				cList.add(new Category(rset.getInt("pro_category_no"),
-									   rset.getString("pro_category_name"),
-									   rset.getString("pro_category_img_path")
-									   ));
+						rset.getString("pro_category_name"),
+						rset.getString("pro_category_img_path")
+						));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -124,7 +97,7 @@ public class ProductDao {
 		return cList;
 	}
 	
-	// 카테고리 별 상품 개수 조회
+	// 모든 카테고리의 상품 개수 조회
 	public ArrayList<Product> selectProductCountList(Connection conn) {
 		ArrayList<Product> pcList = new ArrayList<>();
 		PreparedStatement pstmt = null;
@@ -146,6 +119,165 @@ public class ProductDao {
 		}
 		return pcList;
 	}
+	
+	// 한 페이지에 나타날 상품들 조회 + 전체 리스트
+	public ArrayList<Product> selectProductListSM(Connection conn, PageInfo pi, int categoryNo, String keyword){
+		ArrayList<Product> list = new ArrayList<>();
+		PreparedStatement pstmt = null;
+		ResultSet rset = null;
+		String sql = prop.getProperty("selectProductListSM");
+		
+		int startRow = (pi.getCurrentPage() - 1) * pi.getBoardLimit() + 1; //시작값
+		int endRow = startRow + pi.getBoardLimit() - 1; // 끝값
+		
+		if(categoryNo == 5) {	// 카테고리가 있을 때 == 전체 상품
+			if(keyword != null) {
+				sql += "WHERE PRO_NAME LIKE ";
+				sql += "'%" + keyword + "%'";
+			}
+		} else { // 카테고리를 선택했을 때
+			sql += "WHERE CATEGORY_NO = ";
+			sql += categoryNo;
+			if(keyword != null) {
+				sql += " AND PRO_NAME LIKE";
+				sql += "'%" + keyword + "%'";
+			}
+		}
+		
+		sql += " ORDER BY PRO_CODE DESC) A";
+		sql += ") WHERE RNUM BETWEEN " + startRow + " AND " + endRow;
+		
+		try {
+			pstmt = conn.prepareStatement(sql);
+			
+			rset = pstmt.executeQuery();
+			
+			while(rset.next()) {
+				
+				list.add(new Product(rset.getString("PRO_CODE"),
+						rset.getString("PRO_CATEGORY_NAME"),
+						rset.getString("PRO_NAME"),
+						rset.getString("PRICE"),
+						rset.getDate("PRO_ENROLL_DATE"),
+						rset.getString("PRO_IMG_PATH"),
+						rset.getInt("PRO_COUNT")
+						));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}finally {
+			close(rset);
+			close(pstmt);
+		}
+		return list;
+	}
+	
+	// 베스트 상품 5 조회 (조회수 기준) + 전체
+	public ArrayList<Product> selectBestProductListSM(Connection conn, int categoryNo, String keyword){
+		ArrayList<Product> list = new ArrayList<>();
+		PreparedStatement pstmt = null;
+		ResultSet rset = null;
+		String sql = prop.getProperty("selectBestProductListSM");
+		
+		if(categoryNo == 5) {	// 카테고리가 있을 때
+			if(keyword != null) {
+				sql += "WHERE PRO_NAME LIKE ";
+				sql += "'%" + keyword + "%'";
+			}
+		} else {
+			sql += "WHERE CATEGORY_NO = ";
+			sql += categoryNo;
+			if(keyword != null) {
+				sql += " AND PRO_NAME LIKE";
+				sql += "'%" + keyword + "%'";
+			}
+		}
+		
+		sql += " ORDER BY PRO_COUNT DESC, PRO_NAME ASC) A";
+		sql += ") WHERE RNUM BETWEEN 1 AND 5";
+		
+		try {
+			pstmt = conn.prepareStatement(sql);
+
+			rset = pstmt.executeQuery();
+			
+			while(rset.next()) {
+				list.add(new Product(rset.getString("pro_code"),
+									 rset.getString("pro_category_name"),
+									 rset.getString("pro_name"),
+									 rset.getString("price"),
+									 rset.getDate("pro_enroll_date"),
+									 rset.getString("pro_img_path"),
+									 rset.getInt("pro_count")
+						));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}finally{
+			close(rset);
+			close(pstmt);
+		}
+		return list;
+	}
+		
+	// 위시리스트
+	public ArrayList<WishList> selectWishList(Connection conn, int userNo){
+		ArrayList<WishList> list = new ArrayList<>();
+		PreparedStatement pstmt = null;
+		ResultSet rset = null;
+		
+		String sql = prop.getProperty("selectWishList");
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, userNo);
+			
+			rset = pstmt.executeQuery();
+			
+			while(rset.next()) {
+				WishList wi = new WishList();
+				wi.setProImgPath(rset.getString("pro_img_path"));
+				wi.setProName(rset.getString("pro_name"));
+				wi.setProCode(rset.getString("pro_code"));
+				wi.setPrice(rset.getInt("price"));
+				wi.setWishDate(rset.getDate("wish_date"));
+				list.add(wi);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			close(rset);
+			close(pstmt);
+		}
+		
+		return list;
+		
+	}
+		
+	// 한 카테고리의 상품 개수 조회
+	public int selectListCount(Connection conn, int categoryNo) {
+		int listCount = 0;
+		PreparedStatement pstmt = null;
+		ResultSet rset = null;
+		String sql = prop.getProperty("selectListCount");
+		
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, categoryNo);
+			rset = pstmt.executeQuery();
+			
+			if(rset.next()) {
+				listCount = rset.getInt("listCount");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}finally {
+			close(rset);
+			close(pstmt);
+		}
+		return listCount;
+		
+	}
+	
 	
 	// 한 페이지에 나타날 상품들 조회
 	public ArrayList<Product> selectProductList(Connection conn, PageInfo pi, int categoryNo){
@@ -186,58 +318,7 @@ public class ProductDao {
 		
 	}
 	
-	// 한 페이지에 나타날 상품들 조회 + 전체 리스트
-		public ArrayList<Product> selectProductListSM(Connection conn, PageInfo pi, int categoryNo, String keyword){
-			ArrayList<Product> list = new ArrayList<>();
-			PreparedStatement pstmt = null;
-			ResultSet rset = null;
-			String sql = prop.getProperty("selectProductListSM");
-			
-			int startRow = (pi.getCurrentPage() - 1) * pi.getBoardLimit() + 1; //시작값
-			int endRow = startRow + pi.getBoardLimit() - 1; // 끝값
-			
-			if(categoryNo == 5) {	// 카테고리가 있을 때
-				if(keyword != null) {
-					sql += "WHERE PRO_NAME LIKE ";
-					sql += "'%" + keyword + "%'";
-				}
-			} else {
-				sql += "WHERE CATEGORY_NO = ";
-				sql += categoryNo;
-				if(keyword != null) {
-					sql += " AND PRO_NAME LIKE";
-					sql += "'%" + keyword + "%'";
-				}
-			}
-			
-			sql += " ORDER BY PRO_CODE DESC) A";
-			sql += ") WHERE RNUM BETWEEN " + startRow + " AND " + endRow;
-			
-			try {
-				pstmt = conn.prepareStatement(sql);
-				
-				rset = pstmt.executeQuery();
-				
-				while(rset.next()) {
-					
-					list.add(new Product(rset.getString("PRO_CODE"),
-										 rset.getString("PRO_CATEGORY_NAME"),
-										 rset.getString("PRO_NAME"),
-										 rset.getString("PRICE"),
-										 rset.getDate("PRO_ENROLL_DATE"),
-										 rset.getString("PRO_IMG_PATH"),
-										 rset.getInt("PRO_COUNT")
-										));
-				}
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}finally {
-				close(rset);
-				close(pstmt);
-			}
-			return list;
-			
-		}
+	
 	
 	// 베스트 상품 5 조회 (조회수 기준)
 	public ArrayList<Product> selectBestProductList(Connection conn, int categoryNo){
@@ -270,86 +351,7 @@ public class ProductDao {
 		return list;
 	}
 	
-	// 베스트 상품 5 조회 (조회수 기준) + 전체
-		public ArrayList<Product> selectBestProductListSM(Connection conn, int categoryNo, String keyword){
-			ArrayList<Product> list = new ArrayList<>();
-			PreparedStatement pstmt = null;
-			ResultSet rset = null;
-			String sql = prop.getProperty("selectBestProductListSM");
-			
-			if(categoryNo == 5) {	// 카테고리가 있을 때
-				if(keyword != null) {
-					sql += "WHERE PRO_NAME LIKE ";
-					sql += "'%" + keyword + "%'";
-				}
-			} else {
-				sql += "WHERE CATEGORY_NO = ";
-				sql += categoryNo;
-				if(keyword != null) {
-					sql += " AND PRO_NAME LIKE";
-					sql += "'%" + keyword + "%'";
-				}
-			}
-			
-			sql += " ORDER BY PRO_COUNT DESC, PRO_NAME ASC) A";
-			sql += ") WHERE RNUM BETWEEN 1 AND 5";
-			
-			try {
-				pstmt = conn.prepareStatement(sql);
-
-				rset = pstmt.executeQuery();
-				
-				while(rset.next()) {
-					list.add(new Product(rset.getString("pro_code"),
-										 rset.getString("pro_category_name"),
-										 rset.getString("pro_name"),
-										 rset.getString("price"),
-										 rset.getDate("pro_enroll_date"),
-										 rset.getString("pro_img_path"),
-										 rset.getInt("pro_count")
-							));
-				}
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}finally{
-				close(rset);
-				close(pstmt);
-			}
-			return list;
-		}
 	
-	// 위시리스트
-	public ArrayList<WishList> selectWishList(Connection conn, int userNo){
-		ArrayList<WishList> list = new ArrayList<>();
-		PreparedStatement pstmt = null;
-		ResultSet rset = null;
-		
-		String sql = prop.getProperty("selectWishList");
-		try {
-			pstmt = conn.prepareStatement(sql);
-			pstmt.setInt(1, userNo);
-			
-			rset = pstmt.executeQuery();
-			
-			while(rset.next()) {
-				WishList wi = new WishList();
-				wi.setProImgPath(rset.getString("pro_img_path"));
-				wi.setProName(rset.getString("pro_name"));
-				wi.setProCode(rset.getString("pro_code"));
-				wi.setPrice(rset.getInt("price"));
-				wi.setWishDate(rset.getDate("wish_date"));
-				list.add(wi);
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			close(rset);
-			close(pstmt);
-		}
-		
-		return list;
-		
-	}
 	
 	public int increaseProCount(Connection conn, String proCode) {
 		int result = 0;

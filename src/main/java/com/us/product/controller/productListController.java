@@ -72,7 +72,7 @@ public class productListController extends HttpServlet {
 		// 전체 카테고리 조회 (배너 이미지용)
 		ArrayList<Category> cList = new ProductService().selectCategoryList();
 		
-		// 카테고리 별 상품 개수 조회
+		// 카테고리별 상품 개수 조회
 		ArrayList<Product> pcList = new ProductService().selectProductCountList();
 		
 		// 카테고리별 상품 목록 조회 + 전체
@@ -80,18 +80,16 @@ public class productListController extends HttpServlet {
 		
 		// 카테고리별 베스트 상품 5개 조회 + 전체
 		ArrayList<Product> bList = new ProductService().selectBestProductListSM(categoryNo, keyword);
-		System.out.println(categoryNo);
-		System.out.println(bList);
+		
+		HttpSession session = request.getSession();
 		
 		// 로그인 한 회원일 때 모든 상품 찜 여부 조회
-		HttpSession session = request.getSession();
 		if( (Member)session.getAttribute("loginUser") != null ) {
 			int userNo = ((Member)session.getAttribute("loginUser")).getUserNo();
 			ArrayList<WishList> wList = new ProductService().selectWishList(userNo);
 			request.setAttribute("wList", wList);
 		}
-			
-		session.setAttribute("pi", pi);
+		
 		// 포워딩
 		request.setAttribute("pi", pi);
 		request.setAttribute("cList", cList);

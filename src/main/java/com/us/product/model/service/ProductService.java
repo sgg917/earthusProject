@@ -18,14 +18,7 @@ import com.us.product.model.vo.WishList;
 
 public class ProductService {
 	
-	
-	public int selectListCount(int categoryNo) {
-		Connection conn = getConnection();
-		int listCount = new ProductDao().selectListCount(conn, categoryNo);
-		close(conn);
-		return listCount;
-	}
-	
+	// 카테고리별 or 전채 상품 개수 조회
 	public int selectListCountSM(int categoryNo, String keyword) {
 		Connection conn = getConnection();
 		int listCount = new ProductDao().selectListCountSM(conn, categoryNo, keyword);
@@ -33,6 +26,7 @@ public class ProductService {
 		return listCount;
 	}
 	
+	// 전체 카테고리 조회
 	public ArrayList<Category> selectCategoryList() {
 		Connection conn = getConnection();
 		ArrayList<Category> cList = new ProductDao().selectCategoryList(conn);
@@ -40,11 +34,43 @@ public class ProductService {
 		return cList;
 	}
 	
+	// 카테고리별 상품 개수 조회
 	public ArrayList<Product> selectProductCountList(){
 		Connection conn = getConnection();
 		ArrayList<Product> pcList = new ProductDao().selectProductCountList(conn);
 		close(conn);
 		return pcList;
+	}
+	
+	// 카테고리별 or 전체 상품 목록 조회
+	public ArrayList<Product> selectProductListSM(PageInfo pi, int categoryNo, String keyword){
+		Connection conn = getConnection();
+		ArrayList<Product> list = new ProductDao().selectProductListSM(conn, pi, categoryNo, keyword);
+		close(conn);
+		return list;
+	}
+	
+	// 카테고리별 or 전체 베스트 상품 5개 조회
+	public ArrayList<Product> selectBestProductListSM(int categoryNo, String keyword){
+		Connection conn = getConnection();
+		ArrayList<Product> list = new ProductDao().selectBestProductListSM(conn, categoryNo, keyword);
+		close(conn);
+		return list;
+	}
+	
+	// 찜 여부 조회
+	public ArrayList<WishList> selectWishList(int userNo){
+		Connection conn = getConnection();
+		ArrayList<WishList> list = new ProductDao().selectWishList(conn, userNo);
+		close(conn);
+		return list;
+	}
+	
+	public int selectListCount(int categoryNo) {
+		Connection conn = getConnection();
+		int listCount = new ProductDao().selectListCount(conn, categoryNo);
+		close(conn);
+		return listCount;
 	}
 	
 	public ArrayList<Product> selectProductList(PageInfo pi, int categoryNo){
@@ -54,30 +80,9 @@ public class ProductService {
 		return list;
 	}
 	
-	public ArrayList<Product> selectProductListSM(PageInfo pi, int categoryNo, String keyword){
-		Connection conn = getConnection();
-		ArrayList<Product> list = new ProductDao().selectProductListSM(conn, pi, categoryNo, keyword);
-		close(conn);
-		return list;
-	}
-	
 	public ArrayList<Product> selectBestProductList(int categoryNo){
 		Connection conn = getConnection();
 		ArrayList<Product> list = new ProductDao().selectBestProductList(conn, categoryNo);
-		close(conn);
-		return list;
-	}
-	
-	public ArrayList<Product> selectBestProductListSM(int categoryNo, String keyword){
-		Connection conn = getConnection();
-		ArrayList<Product> list = new ProductDao().selectBestProductListSM(conn, categoryNo, keyword);
-		close(conn);
-		return list;
-	}
-	
-	public ArrayList<WishList> selectWishList(int userNo){
-		Connection conn = getConnection();
-		ArrayList<WishList> list = new ProductDao().selectWishList(conn, userNo);
 		close(conn);
 		return list;
 	}
