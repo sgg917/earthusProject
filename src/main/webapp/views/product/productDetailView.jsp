@@ -140,75 +140,76 @@
               <li>
                 <hr>
                 <span><%= p.getProInfo() %></span>
-                <br><br>
-                <span>배송비</span><span style="float:right">+3,000원</span><br><br>
-                
+                <br>
+                <br>
+                <span>배송비</span>
+                <span style="float:right">+3,000원</span>
+                <br>
+                <br>
                 <!----- 수량 변경 버튼 ----->
                 <div class="product_count" style="width:35%;">
                   <span class="inumber-decrement" id="minus" onclick="amount('m');" style="cursor:pointer"> <i class="ti-minus"></i></span>
                   <input class="input-number" id="qty" type="number" value="1" min="0" max="10" style="border:none; text-align:center;" readonly>
                   <span class="number-increment" id="pluse" onclick="amount('p');" style="cursor:pointer"> <i class="ti-plus"></i></span>
-                  <script></script>
                 </div>
                 <br>
-                <span>최종 금액</span><span id="finPrice" style="float:right"></span>
-                <br><br>
+                <span>최종 금액</span>
+                <span id="finPrice" style="float:right"></span>
+                <br>
+                <br>
               </li>
             </ul>
-                <script>
-               		price();
-                		
-               		function amount(t){ // 상품 선택 수량 변경 (동작!!!)
-               			
-               				
-                		var min_qty = 1;
-               			var this_qty = $("#qty").val() * 1;
-               			var max_qty = <%=p.getStock()%>;
-               			
-               			if(t == 'm'){ // 마이너스 아이콘 선택 시
-               				this_qty -= 1;
-               				if(this_qty < min_qty){
-               					alert("수량은 1개 이상 입력해 주십시오.");
-               					return;
-               				}
-               			}else if(t == 'p') { // 플러스 아이콘 선택 시
-               				this_qty += 1;
-               				if(this_qty > max_qty){
-               					this_qty = max_qty;
-               					return;
-               				}
-               			}
-               			
-               			$('#qty').val(this_qty);
-               			$("#proQty").val(this_qty);
-               			
-               			
-               			var num = <%= Integer.parseInt(p.getPrice()) %>; // 상품 개당 가격
-               			var finNum = num * this_qty + 3000; // 총 가격
-               			
-               			$('.s_product_text>h5').text( num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') + '원' );
-               			$('#finPrice').text( finNum.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') + '원' );
-               			
-               			
-               		}
-                			
-                			
-               		function price(){ // 상품 가격, 천단위 콤마 찍기
-               			
-               			var num = <%= Integer.parseInt(p.getPrice()) %>; // 상품 개당 가격
-               			var amount = $('#qty').val(); // 상품 선택 개수
-               			var finNum = num * amount + 3000; // 총 가격
-               			
-               			$('.s_product_text>h5').text( num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') + '원' );
-               			$('#finPrice').text( finNum.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') + '원' );
-	                		
-               				
-               		}
-                </script>
-                <!----- 수량 변경 버튼 끝 ----->
-                
+            <script>
+            	// 상품 가격 천단위 콤마 찍기
+           		price();
+           		
+           		// 선택 수량 변경 함수
+           		function amount(t){ 
+           			
+            		var min_qty = 1;
+           			var this_qty = $("#qty").val() * 1;
+           			var max_qty = <%=p.getStock()%>;
+           			
+           			if(t == 'm'){ // 마이너스 아이콘 선택 시
+           				this_qty -= 1;
+           				if(this_qty < min_qty){
+           					alert("수량은 1개 이상 입력해 주십시오.");
+           					return;
+           				}
+           			}else if(t == 'p') { // 플러스 아이콘 선택 시
+           				this_qty += 1;
+           				if(this_qty > max_qty){
+           					this_qty = max_qty;
+           					return;
+           				}
+           			}
+           			
+           			// 현재 수량 표시
+           			$('#qty').val(this_qty);
+           			$("#proQty").val(this_qty);
+           			
+           			var num = <%= Integer.parseInt(p.getPrice()) %>; // 상품 개당 가격
+           			var finNum = num * this_qty + 3000; // 총 가격
+           			
+           			$('.s_product_text>h5').text( num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') + '원' );
+           			$('#finPrice').text( finNum.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') + '원' );
+           			
+           		}
+            			
+           		// 가격 천단위 콤마 찍는 함수
+           		function price(){ 
+           			
+           			var num = <%= Integer.parseInt(p.getPrice()) %>; // 상품 개당 가격
+           			var amount = $('#qty').val(); // 상품 선택 개수
+           			var finNum = num * amount + 3000; // 총 가격
+           			
+           			$('.s_product_text>h5').text( num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') + '원' );
+           			$('#finPrice').text( finNum.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') + '원' );
+             		
+           		}
+            </script>
             
-            <!------- 바로결제/장바구니/찜 시작 ------->
+            <!------- 장바구니/바로결재 ------->
             <div class="card_area d-flex justify-content-between align-items-center">
             
               <% if(loginUser != null){ %>
@@ -220,39 +221,35 @@
 	              	<input type="hidden" name="price" value="<%= p.getPrice() %>">
 					<input type="hidden" id="proQty" name="proQty" value="1">	              	
               	</form>
-              	
               <%}else{ %>
-              
               	<button type="button" onclick="$('#unavailable').modal('show');" class="btn_3" style="background:#A8BFAA;">장바구니</button>
               	<a href="#" onclick="$('#unavailable').modal('show');" class="btn_3 font_bold_gray">바로결제</a>
-              
               <%} %>
               
-                <script>
-                	
-                	// 장바구니 추가 함수
-                	function insertCart(){
-                		$.ajax({
-                			url:"<%=contextPath%>/insert.ca",
-                			data:{ proCode:<%=p.getProCode()%>,
-               					   proQty:$('#qty').val()},
-                			type:"post",
-                			success: function(result){
-                				// 장바구니 추가 성공 시 성공 완료 modal
-                				if(result > 0){
-	                				$('#insertCartModal').modal('show');
-                				}
-                			},error: function(){
-                				console.log("장바구니 추가 ajax 통신 실패");
-                			}
-	                		})
-                	}
-                </script>
+              <script>
+              	// 장바구니 추가 함수
+              	function insertCart(){
+              		$.ajax({
+              			url:"<%=contextPath%>/insert.ca",
+              			data:{ proCode:<%=p.getProCode()%>,
+             					   proQty:$('#qty').val()},
+              			type:"post",
+              			success: function(result){
+              				// 성공 완료 modal 띄우기
+              				if(result > 0){
+               				$('#insertCartModal').modal('show');
+              				}
+              			},error: function(){
+              				console.log("장바구니 추가 ajax 통신 실패");
+              			}
+               		})
+              	}
+              </script>
                 
-                <!------- 장바구니 이동 확인 Modal ------->
-                <div class="modal" id="insertCartModal">
-                  <div class="modal-dialog">
-                    <div class="modal-content">
+            <!------- 장바구니 이동 확인 Modal ------->
+            <div class="modal" id="insertCartModal">
+               <div class="modal-dialog">
+                  <div class="modal-content">
 
                       <!-- Modal body -->
                       <div class="modal-body" style="text-align:center; padding:50px 0px; line-height:30px;">
@@ -265,139 +262,105 @@
                         <button type="button" class="btn btn_2" onclick="location.href='<%=contextPath%>/list.ct'">확인</button>
                         <button type="button" class="btn btn_2" data-dismiss="modal">취소</button>
                       </div>
+                      
                    </div>
           		</div>
         	</div>
                       
-               <!------- 로그인 안 했을 때 바로결제,장바구니,찜 실패 Modal ------->
-                <div class="modal" id="unavailable">
-                  <div class="modal-dialog">
-                    <div class="modal-content">
+           <!------- 로그인 요청 Modal ------->
+            <div class="modal" id="unavailable">
+              <div class="modal-dialog">
+                <div class="modal-content">
 
-                      <!-- Modal body -->
-                      <div class="modal-body" style="text-align:center; padding:50px 0px; line-height:30px;">
-                        로그인된 회원만 이용 가능합니다.
-                      </div>
-                      
-                      <!-- Modal footer -->
-                      <div class="modal-footer" style="display:inline-block; text-align:center;">
-                        <button type="button" class="btn btn_2" onclick="location.href='<%=contextPath%>/views/member/goLogin.jsp'">확인</button>
-                        <button type="button" class="btn btn_2" data-dismiss="modal">취소</button>
-                      </div>
-             		
-                    </div>
+                  <!-- Modal body -->
+                  <div class="modal-body" style="text-align:center; padding:50px 0px; line-height:30px;">
+                    로그인된 회원만 이용 가능합니다.
                   </div>
-                </div>
-             		<!------- 장바구니 Modal 끝 ------->
-                <!------- 장바구니 끝 ------->
-
-			  <!------------- 찜 버튼 시작 -------------->
-			  			
-			  <% if(loginUser != null) { %> <!-- 로그인된 회원만 찜 가능 -->
-			  
-			  	<% if(w != null) { %> <!-- 이미 찜 되어있는 상품은 초록색 찜 버튼 보이게 -->
-              		<a href="#" class="like_us green" onclick="checkWishlist();"><i class="fa fa-heart-o" style="font-size:large; color:#f2f2f2;"></i></a>
-              	<% }else { %>
-              		<a href="#" class="like_us white" onclick="checkWishlist();"><i class="fa fa-heart-o" style="font-size:large; color:#778c79;"></i></a>
-              	<% } %>
-              	
-              <% }else { %>
-              <a href="#" class="like_us white" onclick="$('#wishModal').modal('show');"><i class="fa fa-heart-o" style="font-size:large;"></i></a>
-              <% } %>
-              
-              <script>
-              	$.ready(function(){
-              		if(<%=w%> != null){ // 이미 찜 되어 있는 상품일 때
-              			$('.like_us i').css('color', '#f2f2f2');
-            			$('.like_us').removeClass('white').addClass('green');
-              		}else{
-              			$('.like_us i').css('color', '#778c79');
-            			$('.like_us').removeClass('green').addClass('white');
-              		}
-              	})
-              
-                function checkWishlist(){
-                	
-                   <!-- 찜 여부 확인 -->
-			 		$.ajax({
-			 			url:"<%=contextPath%>/checkWish.pr",
-			 			data:{
-			 				proCode:'<%=p.getProCode()%>'
-			 				},
-			 			type:"post",
-			 			success:function(wish){
-			 				
-				 			console.log("담겨 있음");
-				 			
-			 				if(wish == null){
-				 				insertWish();
-			 				}else{
-			 					deleteWish();
-			 				}
-			 				
-			 			},error:function(){
-			 				console.log("찜 여부 확인용 ajax 통신 실패");
-			 			}
-			 		})
-                }
-                
-                function insertWish(){
-                	$.ajax({
-                		url:"<%=contextPath%>/insertWish.pr",
-                		data:{proCode:'<%=p.getProCode()%>'},
-                		type:"post",
-                		success:function(){
-                			console.log("추가 성공");
-                			$('.like_us i').css('color', '#f2f2f2');
-                			$('.like_us').removeClass('white').addClass('green');
-                		},
-                		error:function(){
-                			console.log("위시리스트 추가용 ajax 통신 실패");
-                		}
-                	})
-                }
-                
-                function deleteWish(){
-                	$.ajax({
-                		url:"<%=contextPath%>/proDetailDelWish.pr",
-                		data:{proCode:'<%=p.getProCode()%>'},
-                		type:"post",
-                		success:function(){
-                			console.log("삭제 성공");
-                			$('.like_us i').css('color', '#778c79');
-                			$('.like_us').removeClass('green').addClass('white');
-                		},
-                		error:function(){
-                			console.log("위시리스트 삭제용 ajax 통신 실패");
-                		}
-                	})
-                }
-              </script>
-              
-              <!------- 찜 실패 Modal ------->
-                <div class="modal" id="wishModal">
-                  <div class="modal-dialog">
-                    <div class="modal-content">
-
-                      <!-- Modal body -->
-                      <div class="modal-body" style="text-align:center; padding:50px 0px; line-height:30px;">
-                        로그인된 회원만 이용 가능합니다.
-                      </div>
-                      
-                      <!-- Modal footer -->
-                      <div class="modal-footer" style="display:inline-block; text-align:center;">
-                        <button type="button" class="btn btn_2" onclick="location.href='<%=contextPath%>/views/member/goLogin.jsp'">확인</button>
-                        <button type="button" class="btn btn_2" data-dismiss="modal">취소</button>
-                      </div>
-             		
-                    </div>
+                  
+                  <!-- Modal footer -->
+                  <div class="modal-footer" style="display:inline-block; text-align:center;">
+                    <button type="button" class="btn btn_2" onclick="location.href='<%=contextPath%>/views/member/goLogin.jsp'">확인</button>
+                    <button type="button" class="btn btn_2" data-dismiss="modal">취소</button>
                   </div>
+         		
                 </div>
-              <!------------- 찜 버튼 끝 -------------->
-              <!--바로결제/장바구니/찜 끝-->
+              </div>
+            </div>
+
+		  <!------------- 찜 ------------>
+		  <!-- 로그인된 회원만 찜 가능 -->
+		  <% if(loginUser != null) { %> 
+		  
+		  	<!-- 찜 여부에 따라 찜버튼 색상 다르게 나타남 -->
+		  	<% if(w != null) { %>
+           		<a href="#" class="like_us green" onclick="checkWishlist();"><i class="fa fa-heart-o" style="font-size:large; color:#f2f2f2;"></i></a>
+           	<% }else { %>
+           		<a href="#" class="like_us white" onclick="checkWishlist();"><i class="fa fa-heart-o" style="font-size:large; color:#778c79;"></i></a>
+           	<% } %>
+           	
+          <% }else { %>
+          	<a href="#" class="like_us white" onclick="$('#unavailable').modal('show');"><i class="fa fa-heart-o" style="font-size:large;"></i></a>
+          <% } %>
               
+          <script>
+          	// 찜 함수
+            function checkWishlist(){
+            	
+				$.ajax({
+					url:"<%=contextPath%>/checkWish.pr",
+					data:{
+						proCode:'<%=p.getProCode()%>'
+						},
+					type:"post",
+					success:function(wish){
+		 				// 찜 안 되어 있으면 찜 추가
+						if(wish == null){
+		 					insertWish();
+		 					
+		 				// 찜 되어 있으면 찜 삭제
+						}else{
+							deleteWish();
+						}
+					},error:function(){
+						console.log("찜 여부 확인용 ajax 통신 실패");
+					}
+				})
+            }
             
-        <!--썸네일 우측 상품 설명란 끝-->
+          	// 찜 추가 함수
+            function insertWish(){
+            	$.ajax({
+            		url:"<%=contextPath%>/insertWish.pr",
+            		data:{proCode:'<%=p.getProCode()%>'},
+            		type:"post",
+            		success:function(){
+            			// 추가 성공 --> 찜 버튼 스타일 변경
+            			$('.like_us i').css('color', '#f2f2f2');
+            			$('.like_us').removeClass('white').addClass('green');
+            		},
+            		error:function(){
+            			console.log("위시리스트 추가용 ajax 통신 실패");
+            		}
+            	})
+            }
+            
+          	// 찜 제거 함수
+            function deleteWish(){
+            	$.ajax({
+            		url:"<%=contextPath%>/proDetailDelWish.pr",
+            		data:{proCode:'<%=p.getProCode()%>'},
+            		type:"post",
+            		success:function(){
+            			// 제거 성공 --> 찜 버튼 스타일 변경
+            			$('.like_us i').css('color', '#778c79');
+            			$('.like_us').removeClass('green').addClass('white');
+            		},
+            		error:function(){
+            			console.log("위시리스트 삭제용 ajax 통신 실패");
+            		}
+            	})
+            }
+          </script>
         
       </div>
     </div>

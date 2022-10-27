@@ -66,7 +66,7 @@ integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeV
 	</section>
 	<!-- banner part end -->
 		
-    <!-------- 상품 카데고리 -------->
+    <!-------- 상품 카테고리 -------->
     <section class="cat_product_area section_padding">
         <div class="container">
             <div class="row">
