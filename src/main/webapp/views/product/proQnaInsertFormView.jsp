@@ -113,7 +113,7 @@
 	              <!-- Modal footer -->
 	              <div class="modal-footer">
 	                <button type="button" class="btn btn-sm" data-dismiss="modal" style="width:50%; background:lightgray;">취소</button>
-	                <a href="<%=contextPath%>/detail.pro?proCode=<%=proCode%>" type="button" class="btn btn-sm">확인</a>
+	                <a href="<%=contextPath%>/detail.pro?proCode=<%=proCode%>&cpage=1" type="button" class="btn btn-sm">확인</a>
 	              </div>
 	              
 	            </div>
