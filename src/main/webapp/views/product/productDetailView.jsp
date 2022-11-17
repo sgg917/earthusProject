@@ -396,7 +396,6 @@
       <!--상세정보-->
       <div class="tab-content" id="myTabContent">
         <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-          <br><br>
           <h4>상세정보</h4>
           <br><hr><br>
           <p>
