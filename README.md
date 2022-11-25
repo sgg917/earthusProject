@@ -1,5 +1,9 @@
 # 제로웨이스트 생활용품 판매 사이트 "Earth.Us"
-플라스틱 배출량을 줄이고, 고객들의 자유로운 네트워크 형성을 돕는 쇼핑몰 구현<br>
+플라스틱 배출량을 줄이고, 고객들의 자유로운 네트워크 형성을 돕는 쇼핑몰 구현
+<br><br>
+<img src="https://i.ibb.co/806SPYz/earth-Us-main.jpg" alt="earth-Us-main" border="0" width=100%><br>
+<img src="https://i.ibb.co/dtVndHz/earth-Us.png" alt="earth-Us" border="0" width=100%><br>
+
 <hr>
 
 ### 프로젝트 기간 : 2022년 6월 27일 ~ 2022년 8월 8일
