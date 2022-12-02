@@ -85,6 +85,7 @@
 	#enrollBtn {
 		float:right;
 	}
+	
 	<!-- 리뷰 영역 스타일 -->
 	#rate-star{
 	  display:inline-block;
@@ -303,7 +304,7 @@
           <% } %>
               
           <script>
-          	// 찜 함수
+          	// 찜 여부 검사
             function checkWishlist(){
             	
 				$.ajax({
@@ -313,11 +314,11 @@
 						},
 					type:"post",
 					success:function(wish){
-		 				// 찜 안 되어 있으면 찜 추가
+		 				// 찜 안 되어 있으면 찜 추가 함수 실행
 						if(wish == null){
 		 					insertWish();
 		 					
-		 				// 찜 되어 있으면 찜 삭제
+		 				// 찜 되어 있으면 찜 삭제 함수 실행
 						}else{
 							deleteWish();
 						}
@@ -372,7 +373,7 @@
     <div class="container">
       <hr><br>
       
-      <!----- 상품 상세 조회 네비게이션 ----->
+      <!-- 상품 상세 조회 네비게이션 -->
       <ul class="nav nav-tabs" id="myTab" role="tablist">
         <li class="nav-item">
           <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home"
@@ -391,9 +392,8 @@
             aria-selected="false">리뷰(<%= rlist.size() %>)</a>
         </li>
       </ul>
-      <!----- 상품 상세 조회 네비게이션 끝 ----->
 
-      <!--상세정보-->
+      <!-- 상세정보 -->
       <div class="tab-content" id="myTabContent">
         <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
           <h4>상세정보</h4>
@@ -403,7 +403,7 @@
           </p>
         </div>
 
-        <!--필수표기정보-->
+        <!-- 필수표기정보 -->
         <div class="tab-pane fade" role="tabpanel" id="profile" aria-labelledby="profile-tab">
           <div class="table-responsive">
             <br><br>

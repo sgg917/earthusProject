@@ -142,7 +142,6 @@ integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeV
                                         <option value="PRICE">가격낮은순</option>
                                     </select>
                                 </div>
-                                <!--  상품 정렬 select 끝 -->
                                 
                                 <!--상품 검색바 -->
                                 <div class="single_product_menu d-flex">
@@ -158,7 +157,6 @@ integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeV
                                         </div>
                                     </div>
                                 </div>
-                                <!--상품 검색바 끝 -->
                             </div>
                         </div>
                     </div>

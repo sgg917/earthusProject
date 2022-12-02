@@ -95,7 +95,7 @@
   </div>
 </div>
 	
-	      <!-- 취소 버튼 모달 시작 -->
+	      <!-- 취소 버튼 모달 -->
 	        <div class="modal fade" id="proQnaModal">
 	          <div class="modal-dialog modal-sm">
 	            <div class="modal-content">
@@ -119,7 +119,6 @@
 	            </div>
 	          </div>
 	        </div>
-	      <!-- 취소 버튼 모달 끝 -->
 	
 
 <script>
@@ -140,7 +139,7 @@
         }
     } 
 
-    function validate(){ // 등록 버튼 클릭 시 유효성 검사
+    function validate(){ // 상품 문의 유효성 검사
 
 		let proQnaTitle = $('input[name=proQnaTitle]').val();  // 제목
         let proQnaContent = $('textarea[name=proQnaContent]').val(); // 문의 사항
@@ -148,9 +147,6 @@
         let proQnaWriterName = $('input[name=proQnaWriterName]').val(); // 작성자명
         let proQnaEmail = $('input[name=proQnaEmail]').val();  // 이메일
         let proQnaPhone = $('input[name=proQnaPhone]').val();  // 휴대폰 번호
-  
-        //const reqExp3 = ""
-        // proQnaContent.length < 20 || proQnaContent.length > 150
         
         if(proQnaTitle == ""){ // 제목 미입력
         	
@@ -223,7 +219,7 @@
     
 </script>
 
-<!----------------- 모달 ------------------->
+<!-- 모달 -->
 <div class="modal fade" id="errorModal">
   <div class="modal-dialog">
     <div class="modal-content">
