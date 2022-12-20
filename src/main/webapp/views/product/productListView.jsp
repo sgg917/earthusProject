@@ -4,7 +4,7 @@
 	page import="java.util.ArrayList, com.us.common.model.vo.PageInfo, com.us.product.model.vo.*"
  %>
 <%
-	int categoryNo = Integer.parseInt(request.getParameter("categoryNo")); // 이전 페이지에서 넘겨준 카테고리 번호
+	int no = Integer.parseInt(request.getParameter("categoryNo")); // 이전 페이지에서 넘겨준 카테고리 번호
 	
 	// 페이징
 	PageInfo pi = (PageInfo)request.getAttribute("pi");
@@ -57,7 +57,7 @@ integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeV
 	            <div class="col-lg-8" style="max-width: 1080px; flex:100%">
 	                <div class="breadcrumb_iner">
 	                    <div class="breadcrumb_iner_item">
-	                        <img style="width:100%; height:100%;" src="<%=contextPath%>/<%=cList.get(categoryNo-1).getCategoryImgPath()%>">
+	                        <img style="width:100%; height:100%;" src="<%=contextPath%>/<%=cList.get(no-1).getCategoryImgPath()%>">
 	                    </div>
 	                </div>
 	            </div>
@@ -66,11 +66,10 @@ integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeV
 	</section>
 	<!-- banner part end -->
 		
-    <!-------- 상품 카테고리 -------->
+    <!-- 상품 카테고리 -->
     <section class="cat_product_area section_padding">
         <div class="container">
             <div class="row">
-            
             	<!-- 좌측 사이드바 -->
                 <div class="col-lg-3">
                     <div class="left_sidebar_area"> 
@@ -80,47 +79,20 @@ integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeV
                             </div>
                             <div class="widgets_inner">
                                 <ul class="list">
-
-                                    <li>
-                                    	<% if(categoryNo == 1) { %>
-                                    		<a href="<%=contextPath%>/list.pro?categoryNo=1&cpage=1" class="category-1" style="font-weight:bold">Hair</a>
-                                        	<span style="font-weight:bold">(<%= pcList.get(0).getProductCount() %>)</span>
-                                    	<% } else { %>
-                                    		<a href="<%=contextPath%>/list.pro?categoryNo=1&cpage=1" class="category-1">Hair</a>
-                                        	<span>(<%= pcList.get(0).getProductCount() %>)</span>
-                                    	<% } %>
-                                    </li>
-                                    
-                                    <li>
-                                    	<% if(categoryNo == 2) { %>
-                                    		<a href="<%=contextPath%>/list.pro?categoryNo=2&cpage=1" class="category-2" style="font-weight: bold">Body</a>
-                                        	<span style="font-weight: bold;">(<%= pcList.get(1).getProductCount() %>)</span>
-                                    	<% } else { %>
-                                    		<a href="<%=contextPath%>/list.pro?categoryNo=2&cpage=1" class="category-2">Body</a>
-                                        	<span>(<%= pcList.get(1).getProductCount() %>)</span>
-                                    	<% } %>
-                                    </li>
-                                    
-                                    <li>
-                                    	<% if(categoryNo == 3) { %>
-                                    		<a href="<%=contextPath%>/list.pro?categoryNo=3&cpage=1" class="category-3" style="font-weight: bold">Kitchen</a>
-	                                        <span style="font-weight: bold">(<%= pcList.get(2).getProductCount() %>)</span>
-                                    	<% } else { %>
-	                                        <a href="<%=contextPath%>/list.pro?categoryNo=3&cpage=1" class="category-3">Kitchen</a>
-	                                        <span>(<%= pcList.get(2).getProductCount() %>)</span>
-                                    	<% } %>
-                                    </li>
-                                    
-                                    <li>
-                                    	<% if(categoryNo == 4) { %>
-                                    		<a href="<%=contextPath%>/list.pro?categoryNo=4&cpage=1" class="category-4" style="font-weight: bold">Bathroom</a>
-                                        	<span style="font-weight: bold">(<%= pcList.get(3).getProductCount() %>)</span>
-                                    	<% } else { %>
-                                    		<a href="<%=contextPath%>/list.pro?categoryNo=4&cpage=1" class="category-4">Bathroom</a>
-                                        	<span>(<%= pcList.get(3).getProductCount() %>)</span>
-                                    	<% } %>
-                                    </li>
-                                    
+                                	<% for(int i=0; i<cList.size()-1; i++) { %>
+                                		<li>
+                                			<!-- 선택한 카테고리라면 글씨 bold -->
+	                                		<% if(cList.get(i).getCategoryNo() == no) { %>
+	                                			<a href="<%=contextPath%>/list.pro?categoryNo=<%=no%>&cpage=1" 
+	                                			   class="category-<%=no%>" style="font-weight:bold"><%= cList.get(i).getCategoryName() %></a>
+	                                			<span style="font-weight:bold">(<%= pcList.get(no - 1).getProductCount() %>)</span>
+	                                		<% } else { %>
+	                                			<a href="<%=contextPath%>/list.pro?categoryNo=<%=cList.get(i).getCategoryNo()%>&cpage=1" 
+	                                			   class="category-<%=cList.get(i).getCategoryNo()%>"><%=cList.get(i).getCategoryName()%></a>
+                                        		<span>(<%= pcList.get(cList.get(i).getCategoryNo() - 1).getProductCount() %>)</span>
+	                                		<% } %>
+                                		</li>
+                                	<% } %>
                                 </ul>
                             </div>
                         </aside>
@@ -162,7 +134,7 @@ integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeV
                     </div>
 
                     <!------- 베스트 상품 ------->
-                    <% if(categoryNo != 5) { %>
+                    <% if(no != 5) { %>
                     <section class="product_list best_seller">
                         <div class="container">
                         
@@ -236,7 +208,7 @@ integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeV
 		                        <ul class="pagination">
 		                        	<% if(currentPage != 1) {%>
 		                                <li class="page-item">
-		                                    <button onclick="location.href='<%=contextPath%>/list.pro?categoryNo=<%= categoryNo %>&cpage=<%=currentPage-1%>';" class="page-link" aria-label="Previous">
+		                                    <button onclick="location.href='<%=contextPath%>/list.pro?categoryNo=<%= no %>&cpage=<%=currentPage-1%>';" class="page-link" aria-label="Previous">
 		                                        <i class="ti-angle-left"></i>
 		                                    </button>
 		                                </li>
@@ -249,14 +221,14 @@ integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeV
 		                                    </li>
 							            <% }else { %>
 		                                    <li class="page-item">
-		                                        <button class="page-link" onclick="location.href='<%=contextPath%>/list.pro?categoryNo=<%= categoryNo %>&cpage=<%= p %>';"><%= p %></button>
+		                                        <button class="page-link" onclick="location.href='<%=contextPath%>/list.pro?categoryNo=<%= no %>&cpage=<%= p %>';"><%= p %></button>
 		                                    </li>
 										<% } %>
 									<% } %>
 								
 		                            <% if(currentPage != maxPage) { %>
 		                                <li class="page-item">
-		                                    <button onclick="location.href='<%= contextPath %>/list.pro?categoryNo=<%= categoryNo %>&cpage=<%= currentPage+1 %>';" class="page-link" aria-label="Next">
+		                                    <button onclick="location.href='<%= contextPath %>/list.pro?categoryNo=<%= no %>&cpage=<%= currentPage+1 %>';" class="page-link" aria-label="Next">
 		                                        <i class="ti-angle-right"></i>
 		                                    </button>
 		                                </li>
@@ -266,8 +238,8 @@ integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeV
 		                 </div>
 		               <!-- 페이징바 끝 -->
 			               
-			            <!------------------- Modal ------------------->
-			           	<!------- 장바구니 추가 완료 Modal ------->
+			            <!-- Modal -->
+			           	<!-- 장바구니 추가 완료 Modal -->
 		                <div class="modal fade" id="insertCartModal">
 		                  <div class="modal-dialog">
 		                    <div class="modal-content">
@@ -288,7 +260,7 @@ integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeV
 			          	   </div>
 			        	</div>
 		                      
-		               <!------- 장바구니 추가 실패 Modal ------->
+		               <!-- 장바구니 추가 실패 Modal -->
 		                <div class="modal fade" id="unavailable">
 		                  <div class="modal-dialog">
 		                    <div class="modal-content">
@@ -307,7 +279,7 @@ integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeV
 		                    </div>
 		                  </div>
 		                </div>
-                      	<!------------------- Modal ------------------->
+		                <!-- Modal end -->
                       	
                     </div>
                 </div>
@@ -325,12 +297,12 @@ integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeV
 
 		// --------------- 카테고리별 상품 검색 -------------------
     	function searchPro(){
-			location.href = "<%= contextPath %>/list.pro?categoryNo=" + <%= categoryNo %> + "&cpage=1&keyword=" + $("#pNameKeyword").val();                     		
+			location.href = "<%= contextPath %>/list.pro?categoryNo=" + <%= no %> + "&cpage=1&keyword=" + $("#pNameKeyword").val();                     		
     
     	}
     	
     
-    	// -------------- 장바구니 추가 ajax ---------------
+    	// --- 장바구니 추가 ajax ---
 	    function insertCart(proCode){
 			
 			$.ajax({
@@ -351,7 +323,7 @@ integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeV
 		}
     
     	
-       	// ---------------- 찜 버튼 css 변경 -----------------
+       	// --- 찜 버튼 css 변경 ---
         $('.loginHeart').click(function(){
 	        if( $(this).hasClass("color-gray") ){ 
 	         	$(this).removeClass("color-gray").addClass("color-lightgreen");
@@ -360,7 +332,7 @@ integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeV
 	        }
         })
         
-        // ------- 상품 이미지나 상품명, 가격 클릭 시 상품 상세 페이지로 이동 -------
+        // --- 상품 이미지나 상품명, 가격 클릭 시 상품 상세 페이지로 이동 ---
         $(function(){
             $(".single_product_item img").click(function(){
             	const proCode = $(this).siblings('.single_product_text').children('input[type=hidden]').val();
@@ -370,7 +342,7 @@ integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeV
     </script>
     
     <!--상품 목록 영역 끝-->
-    <!--================상품 카테고리 영역 끝=================-->
+    <!-- 상품 카테고리 영역 끝-->
     
 
     <!----- owl carousel 사용 시 필요한 링크와 구문 ----->
