@@ -210,7 +210,7 @@
            		}
             </script>
             
-            <!------- 장바구니/바로결재 ------->
+            <!-- 장바구니/바로결제 -->
             <div class="card_area d-flex justify-content-between align-items-center">
             
               <% if(loginUser != null){ %>
@@ -228,7 +228,7 @@
               <%} %>
               
               <script>
-              	// 장바구니 추가 함수
+              	// 장바구니 추가
               	function insertCart(){
               		$.ajax({
               			url:"<%=contextPath%>/insert.ca",
@@ -247,7 +247,7 @@
               	}
               </script>
                 
-            <!------- 장바구니 이동 확인 Modal ------->
+            <!-- 장바구니 이동 확인 Modal -->
             <div class="modal" id="insertCartModal">
                <div class="modal-dialog">
                   <div class="modal-content">
@@ -268,7 +268,7 @@
           		</div>
         	</div>
                       
-           <!------- 로그인 요청 Modal ------->
+           <!-- 로그인 요청 Modal -->
             <div class="modal" id="unavailable">
               <div class="modal-dialog">
                 <div class="modal-content">
@@ -288,8 +288,8 @@
               </div>
             </div>
 
-		  <!------------- 찜 ------------>
-		  <!-- 로그인된 회원만 찜 가능 -->
+		  <!-- 찜 기능 -->
+		  <!-- 회원은 찜 가능 -->
 		  <% if(loginUser != null) { %> 
 		  
 		  	<!-- 찜 여부에 따라 찜버튼 색상 다르게 나타남 -->
@@ -299,6 +299,7 @@
            		<a href="#" class="like_us white" onclick="checkWishlist();"><i class="fa fa-heart-o" style="font-size:large; color:#778c79;"></i></a>
            	<% } %>
            	
+          <!-- 비회원은 로그인 요청 모달 나타남 --> 	
           <% }else { %>
           	<a href="#" class="like_us white" onclick="$('#unavailable').modal('show');"><i class="fa fa-heart-o" style="font-size:large;"></i></a>
           <% } %>
